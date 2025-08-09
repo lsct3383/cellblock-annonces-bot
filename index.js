@@ -38,9 +38,13 @@ client.on('messageCreate', async (msg) => {
       .setDescription(desc)
       .setFooter({ text: 'CellBlock RP | WL' });
 
-    await msg.channel.send({ content: title, embeds: [embed] });
+    await msg.channel.send({
+      content: "@everyone\n" + title,
+      embeds: [embed],
+      allowedMentions: { parse: ['everyone'] } // Autorise le ping
+    });
 
-    // Supprimer le message d'origine si tu veux un salon clean :
+    // Optionnel : supprime le message d'origine pour garder le salon clean
     // await msg.delete().catch(() => {});
 
   } catch (e) {
