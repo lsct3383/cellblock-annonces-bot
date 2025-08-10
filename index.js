@@ -9,6 +9,7 @@ import {
   Client,
   GatewayIntentBits,
   EmbedBuilder,
+  PermissionsBitField, // (AJOUT) pour vérifier les permissions si besoin
 } from 'discord.js';
 
 // ====== Discord Bot ======
@@ -25,6 +26,7 @@ client.once('ready', () => {
 });
 
 const ANNOUNCES_CHANNEL_ID      = process.env.ANNOUNCES_CHANNEL_ID;
+const CHANNEL_GUIDE_ID          = process.env.CHANNEL_GUIDE_ID;        // (AJOUT) salon guide WL
 const QCM_VALIDATION_CHANNEL_ID = process.env.QCM_VALIDATION_CHANNEL_ID;
 const QCM_NOTIFY_SECRET         = process.env.QCM_NOTIFY_SECRET || '';
 const QCM_WEBHOOK_URL           = process.env.QCM_WEBHOOK_URL || ''; // optionnel
@@ -138,35 +140,86 @@ app.listen(PORT, () => {
   console.log(`🌐 HTTP server up on :${PORT}`);
 });
 
-// ====== (Optionnel) auto-annonce quand on poste dans #annonces ======
+/* ============================
+   MESSAGERIE DISCORD
+   - Auto-annonce si un message est posté dans #annonces (comme avant)
+   - (AJOUT) Commande texte !guidewl pour poster le guide WL dans le salon dédié
+   ============================ */
+
+// Contenu guide WL (AJOUT)
+const GUIDE_WL = [
+  '**📖 Guide pour réussir sa Whitelist – CellBlock RP**',
+  '',
+  '**1) Comprendre l’univers**',
+  'CellBlock RP est un serveur RP prison : immersion, réalisme et cohérence obligatoires.',
+  'Vous incarnez un détenu, un gardien ou un rôle lié à l’univers carcéral.',
+  'Agissez toujours selon la logique “prison” et la cohérence de votre personnage.',
+  '',
+  '**2) Préparer sa candidature**',
+  'Lisez le règlement et préparez une histoire claire : pourquoi votre perso est ici, ses objectifs.',
+  'Adoptez un comportement RP irréprochable pendant le QCM et la présentation vocale.',
+  '',
+  '**3) Pendant le QCM**',
+  'Lisez chaque question attentivement, évitez les réponses au hasard.',
+  '',
+  '**4) Passage vocal obligatoire**',
+  'Après le QCM, passage en vocal avec le staff : présentez-vous et votre projet RP.',
+  'Montrez votre motivation et votre compréhension de l’univers.',
+  '',
+  '**5) Après validation**',
+  'Accès complet au serveur. Respectez votre rôle et développez votre personnage.',
+  'La WL peut être retirée si l’esprit du serveur n’est pas respecté.'
+].join('\n');
+
 client.on('messageCreate', async (msg) => {
   try {
     if (msg.author.bot) return;
+
+    // (AJOUT) Commande simple pour poster le guide WL dans le salon guide
+    if (msg.content.trim().toLowerCase() === '!guidewl') {
+      // (optionnel) Vérif permission admin; sinon commente ces 3 lignes
+      if (!msg.member?.permissions?.has(PermissionsBitField.Flags.Administrator)) {
+        return msg.reply('⛔ Tu dois être admin pour utiliser cette commande.');
+      }
+      try {
+        const guideChannel = await client.channels.fetch(CHANNEL_GUIDE_ID);
+        if (guideChannel?.isTextBased()) {
+          await guideChannel.send(GUIDE_WL);
+          await msg.react('✅');
+        }
+      } catch (e) {
+        console.error('❌ Envoi guide WL:', e);
+        await msg.reply('Erreur lors de l’envoi du guide WL.');
+      }
+      return; // on s’arrête là pour cette commande
+    }
+
+    // ====== (Comportement existant) auto-annonce quand on poste dans #annonces ======
     if (msg.channel.id !== ANNOUNCES_CHANNEL_ID) return;
 
     const title = "📢 **Annonce Officielle – CellBlock RP**";
-const desc =
-  "**🧩 Minijeu Cuisine**\n" +
-  "Interface fermée par défaut avec bouton **Fermer**.\n" +
-  "À la fin de la cuisson, l’item correspondant est automatiquement ajouté à l’inventaire.\n\n" +
+    const desc =
+      "**🧩 Minijeu Cuisine**\n" +
+      "Interface fermée par défaut avec bouton **Fermer**.\n" +
+      "À la fin de la cuisson, l’item correspondant est automatiquement ajouté à l’inventaire.\n\n" +
 
-  "**🎨 Améliorations visuelles**\n" +
-  "Suppression de l’ancien fond bleu plein écran.\n" +
-  "Nouveau fond bleu uniquement derrière le cadre du minijeu.\n\n" +
+      "**🎨 Améliorations visuelles**\n" +
+      "Suppression de l’ancien fond bleu plein écran.\n" +
+      "Nouveau fond bleu uniquement derrière le cadre du minijeu.\n\n" +
 
-  "**📦 Nouveaux items ajoutés**\n" +
-  "🥗 Salade composée\n" +
-  "🧅 Oignons sautés\n" +
-  "🥩 Steak fromage\n" +
-  "🍝 Pâtes à la sauce tomate\n" +
-  "🍫 Œufs au chocolat\n\n" +
+      "**📦 Nouveaux items ajoutés**\n" +
+      "🥗 Salade composée\n" +
+      "🧅 Oignons sautés\n" +
+      "🥩 Steak fromage\n" +
+      "🍝 Pâtes à la sauce tomate\n" +
+      "🍫 Œufs au chocolat\n\n" +
 
-  "**🌐 Site web**\n" +
-  "Ajout d’un logo dans l’onglet du navigateur.\n" +
-  "Règlement retravaillé pour plus de clarté et de professionnalisme.\n\n" +
+      "**🌐 Site web**\n" +
+      "Ajout d’un logo dans l’onglet du navigateur.\n" +
+      "Règlement retravaillé pour plus de clarté et de professionnalisme.\n\n" +
 
-  "**🔧 Optimisations**\n" +
-  "Meilleure fluidité et système anti-spam pour éviter les abus.";
+      "**🔧 Optimisations**\n" +
+      "Meilleure fluidité et système anti-spam pour éviter les abus.";
 
     const embed = new EmbedBuilder()
       .setColor(0xFF7A00)
@@ -181,7 +234,7 @@ const desc =
     });
 
   } catch (e) {
-    console.error('❌ Erreur auto-annonce :', e);
+    console.error('❌ Erreur messageCreate :', e);
   }
 });
 
