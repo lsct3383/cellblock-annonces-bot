@@ -184,7 +184,20 @@ client.on('messageCreate', async (msg) => {
       try {
         const guideChannel = await client.channels.fetch(CHANNEL_GUIDE_ID);
         if (guideChannel?.isTextBased()) {
-          await guideChannel.send(GUIDE_WL);
+          // ====== AJOUT: embed orange + @everyone ======
+          const embed = new EmbedBuilder()
+            .setColor(0xFF7A00) // orange
+            .setTitle("📖 Guide WL – CellBlock RP")
+            .setDescription(GUIDE_WL)
+            .setFooter({ text: 'CellBlock RP | WL' });
+
+          await guideChannel.send({
+            content: "@everyone",
+            embeds: [embed],
+            allowedMentions: { parse: ['everyone'] }
+          });
+          // =============================================
+
           await msg.react('✅');
         }
       } catch (e) {
