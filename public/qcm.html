@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CellBlock RP — QCM WL (Test)</title>
+  <style>
+    :root { --bg:#0b0d10; --card:#12151a; --muted:#a6adbb; --text:#e8edf2; --accent:#4f8cff; --ok:#2ecc71; --err:#ff6b6b; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, #0b0d10 0%, #0f1318 100%);
+      color:var(--text);
+      display:flex; min-height:100dvh; align-items:center; justify-content:center; padding:24px;
+    }
+    .card {
+      width:100%; max-width:720px; background:var(--card);
+      border:1px solid rgba(255,255,255,.06); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+      padding:28px;
+    }
+    .head { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
+    .badge { font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(79,140,255,.12); color:var(--accent); border:1px solid rgba(79,140,255,.35);}
+    h1 { font-size:20px; margin:0; }
+    p.muted { color:var(--muted); margin:4px 0 0 0; font-size:14px; }
+    .q { margin-top:18px; padding:18px; border:1px solid rgba(255,255,255,.06); border-radius:16px; background:rgba(255,255,255,.02); }
+    .q h2 { font-size:16px; margin:0 0 12px 0; }
+    .choices { display:grid; gap:10px; }
+    label.choice {
+      display:flex; gap:10px; align-items:flex-start; padding:12px; border:1px solid rgba(255,255,255,.08);
+      border-radius:12px; cursor:pointer; background:#0f1216;
+    }
+    label.choice:hover { border-color:rgba(79,140,255,.4); }
+    input[type="radio"] { margin-top:2px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+    .row input {
+      flex:1 1 220px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:#0f1216; color:var(--text); outline:none;
+    }
+    .actions { display:flex; gap:12px; align-items:center; margin-top:18px; }
+    button {
+      appearance:none; border:none; padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer;
+      background:var(--accent); color:white;
+    }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+    .note { font-size:13px; color:var(--muted); }
+    .toast {
+      position:fixed; inset:auto 16px 16px auto; padding:12px 14px; border-radius:12px;
+      background:#10161f; border:1px solid rgba(255,255,255,.08); color:var(--text);
+      box-shadow:0 10px 25px rgba(0,0,0,.35); min-width:260px; display:none;
+    }
+    .toast.ok { border-color:rgba(46,204,113,.35); }
+    .toast.err { border-color:rgba(255,107,107,.35); }
+    .small { font-size:12px; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <span class="badge">Whitelist • Test</span>
+      <div>
+        <h1>QCM CellBlock RP — 1 question</h1>
+        <p class="muted">Design sobre • 2025 • Envoi automatique vers l’API pour validation.</p>
+      </div>
+    </div>
+
+    <form id="qcm-form" class="q" autocomplete="off">
+      <h2>Q1 — Rôleplay basique</h2>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q1" value="A" required> <span>Tu dois toujours rester dans ton personnage (RP) et éviter le hors-RP.</span></label>
+        <label class="choice"><input type="radio" name="q1" value="B"> <span>Tu peux HRP si c’est drôle, même en scène sérieuse.</span></label>
+        <label class="choice"><input type="radio" name="q1" value="C"> <span>Le powergaming est accepté si ça t’arrange.</span></label>
+        <label class="choice"><input type="radio" name="q1" value="D"> <span>Le metagaming est conseillé pour gagner du temps.</span></label>
+      </div>
+
+      <div class="row">
+        <input id="discordId" name="discordId" placeholder="Ton ID Discord (ex: 123456789012345678)" required />
+        <input id="username"  name="username"  placeholder="Ton pseudo (ex: Jo#1234)" />
+      </div>
+
+      <div class="actions">
+        <button id="submitBtn" type="submit">Envoyer ma réponse</button>
+        <span class="note">En soumettant, tu acceptes l’envoi vers <code>/notify-qcm</code>.</span>
+      </div>
+      <p class="small" style="margin-top:8px">Astuce : la bonne réponse ici est <b>A</b> (rester en RP). C’est un test d’intégration.</p>
+    </form>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // 👉 Config front minimal
+    const API_ENDPOINT = "/notify-qcm";             // même domaine (Railway)
+    const QCM_SECRET  = "jojo2002";                 // envoyé en header x-qcm-secret
+
+    const form = document.getElementById("qcm-form");
+    const toast = document.getElementById("toast");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function showToast(message, type="ok") {
+      toast.textContent = message;
+      toast.className = "toast " + (type === "ok" ? "ok" : "err");
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 4200);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+
+      const data = new FormData(form);
+      const answer = data.get("q1");
+      const discordId = data.get("discordId");
+      const username  = data.get("username") || null;
+
+      // Corrigé local (Q1 correcte = A)
+      const total = 1;
+      const score = (answer === "A") ? 1 : 0;
+
+      try {
+        const res = await fetch(API_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-qcm-secret": QCM_SECRET
+          },
+          body: JSON.stringify({ discordId, username, score, total })
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || ("HTTP " + res.status));
+        }
+
+        showToast("✅ Réponse envoyée. Tu seras contacté si éligible WL.");
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        showToast("❌ Envoi impossible : " + err.message, "err");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

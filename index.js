@@ -3,6 +3,8 @@ import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import {
   Client,
   GatewayIntentBits,
@@ -34,6 +36,10 @@ app.use(bodyParser.json());
 // CORS (autorise appels depuis ton site)
 app.use(cors({ origin: '*', methods: ['GET','POST','OPTIONS'], allowedHeaders: ['Content-Type','x-qcm-secret'] }));
 app.options('/notify-qcm', cors()); // préflight
+
+// 📂 Servir le dossier public
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Home & health
 app.get('/', (_req, res) => res.status(200).send('CellBlock Annonces — OK'));
