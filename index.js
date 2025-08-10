@@ -145,12 +145,28 @@ client.on('messageCreate', async (msg) => {
     if (msg.channel.id !== ANNOUNCES_CHANNEL_ID) return;
 
     const title = "📢 **Annonce Officielle – CellBlock RP**";
-    const desc =
-      "**🔨 En cours de développement**\n" +
-      "CellBlock RP est actuellement en construction 🔧\n" +
-      "Notre équipe travaille dur pour vous offrir une **expérience RP unique**, immersive et réaliste.\n\n" +
-      "**⏳ Restez connectés !**\n" +
-      "Nous annoncerons bientôt la date d’ouverture officielle 🚀";
+const desc =
+  "**🧩 Minijeu Cuisine**\n" +
+  "Interface fermée par défaut avec bouton **Fermer**.\n" +
+  "À la fin de la cuisson, l’item correspondant est automatiquement ajouté à l’inventaire.\n\n" +
+
+  "**🎨 Améliorations visuelles**\n" +
+  "Suppression de l’ancien fond bleu plein écran.\n" +
+  "Nouveau fond bleu uniquement derrière le cadre du minijeu.\n\n" +
+
+  "**📦 Nouveaux items ajoutés**\n" +
+  "🥗 Salade composée\n" +
+  "🧅 Oignons sautés\n" +
+  "🥩 Steak fromage\n" +
+  "🍝 Pâtes à la sauce tomate\n" +
+  "🍫 Œufs au chocolat\n\n" +
+
+  "**🌐 Site web**\n" +
+  "Ajout d’un logo dans l’onglet du navigateur.\n" +
+  "Règlement retravaillé pour plus de clarté et de professionnalisme.\n\n" +
+
+  "**🔧 Optimisations**\n" +
+  "Meilleure fluidité et système anti-spam pour éviter les abus.";
 
     const embed = new EmbedBuilder()
       .setColor(0xFF7A00)
