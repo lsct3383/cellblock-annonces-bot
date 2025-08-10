@@ -3,175 +3,232 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CellBlock RP — QCM WL (40 Questions)</title>
+<title>CellBlock RP — QCM WL (40)</title>
+<meta name="description" content="CellBlock RP — QCM Whitelist 40 questions.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-dark: #0b0d10;
-  --bg-card: #14171c;
-  --orange: #ff7a00;
-  --steel: #9ea3a8;
-  --text: #e8edf2;
-  --accent: #ff7a00;
+:root{
+  --bg:#0a0a0b;--bg-2:#0f1115;--card:#111319cc;--text:#e8eaed;--muted:#a5abb6;
+  --brand:#ff7a00;--brand-2:#ffb36a;--accent:#00ffd1;--ok:#22c55e;--err:#ef4444;
+  --shadow:0 20px 50px rgba(0,0,0,.35)
 }
-body {
-  margin:0;
-  font-family: system-ui, sans-serif;
-  background: linear-gradient(160deg, #0b0d10, #1a1e24);
-  color: var(--text);
-  display:flex;
-  justify-content:center;
-  padding:20px;
-}
-.card {
-  background: var(--bg-card);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  padding:20px;
-  max-width: 900px;
-  width:100%;
-}
-h1 {
-  text-align:center;
-  color: var(--accent);
-  margin:0 0 10px 0;
-}
-.progress {
-  background: #222;
-  border-radius: 10px;
-  overflow: hidden;
-  height: 12px;
-  margin-bottom: 10px;
-}
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), #ff9f40);
-  width: 0%;
-  transition: width 0.3s ease;
-}
-.question {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding:15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-.choices label {
-  display:block;
-  padding:10px;
-  margin:5px 0;
-  background: #1c1f24;
-  border-radius: 8px;
-  cursor:pointer;
-  border: 1px solid transparent;
-}
-.choices label:hover {
-  border-color: var(--accent);
-}
-.row {
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
-.row input {
-  flex:1 1 200px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:#0f1216;
-  color:var(--text);
-}
-button {
-  background: var(--accent);
-  color:white;
-  padding:12px 16px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.toast {
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#10161f;
-  padding:12px 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.1);
-  display:none;
-}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:var(--bg)}
+.bg-animated{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1200px 800px at 10% 10%,rgba(255,122,0,.14),transparent 60%),
+  radial-gradient(900px 700px at 90% 20%,rgba(0,255,209,.08),transparent 60%),
+  radial-gradient(1000px 800px at 50% 90%,rgba(255,179,106,.10),transparent 60%),
+  linear-gradient(180deg,#0a0a0b 0%,#0b0d12 60%,#0a0a0b 100%)}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.06;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" opacity="0.6" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');mix-blend-mode:soft-light}
+.container{width:min(960px,92vw);margin:0 auto;padding:28px 0}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(180deg,var(--brand),#ff8e26);box-shadow:0 0 0 3px rgba(255,122,0,.15)}
+.brand span{font-size:1rem;font-weight:800;letter-spacing:.3px;color:var(--text)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.progress-wrap{margin:16px 0 12px}
+.progress-bar{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--brand),#ff9f40);width:0%;transition:width .35s ease}
+.progress-meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-weight:700;font-size:.9rem;margin-top:8px}
+.qwrap{margin-top:16px}
+.qtitle{font-size:clamp(18px,2.6vw,22px);margin:0 0 12px}
+.choices{display:grid;gap:10px}
+.choice{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#151821;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease}
+.choice:hover{transform:translateY(-1px);border-color:rgba(255,122,0,.45);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.choice input{margin-top:3px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;font-weight:800;letter-spacing:.3px;cursor:pointer}
+.btn.primary{color:#0b0b0b;background:linear-gradient(180deg,var(--brand) 0%,#ff8e26 100%);box-shadow:0 12px 30px rgba(255,122,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn.ghost{color:var(--text);background:linear-gradient(180deg,#1a1d24 0%,#14161c 100%);border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.idrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.idrow input{flex:1 1 220px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0f1216;color:var(--text);outline:none}
+.small{color:var(--muted);font-size:.9rem}
+.toast{position:fixed;inset:auto 20px 20px auto;padding:12px 14px;border-radius:12px;background:#10161f;border:1px solid rgba(255,255,255,.08);display:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.toast.ok{border-color:rgba(34,197,94,.35)} .toast.err{border-color:rgba(239,68,68,.35)}
 </style>
 </head>
 <body>
-<div class="card">
-  <h1>CellBlock RP — QCM WL</h1>
-  <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
-  <p id="progress-text">Question 1 / 40</p>
-  <form id="qcm-form"></form>
-  <div class="row">
-    <input id="discordId" placeholder="Ton ID Discord" required />
-    <input id="username" placeholder="Ton pseudo Discord" />
+<div class="bg-animated"></div><div class="noise"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="brand"><span class="dot"></span><span>CELLBLOCK RP — QCM WL</span></div>
+    <div class="small">Score requis : <b>≥ 70%</b> • 28/40</div>
   </div>
-  <button type="button" id="submitBtn">Envoyer mes réponses</button>
+
+  <div class="card">
+    <div class="progress-wrap">
+      <div id="bar" class="progress-bar"></div>
+      <div class="progress-meta">
+        <div id="metaText">Question 1 / 40</div>
+        <div id="percent">0%</div>
+      </div>
+    </div>
+
+    <div class="qwrap">
+      <h2 id="qtitle" class="qtitle"></h2>
+      <div id="choices" class="choices"></div>
+
+      <div class="idrow">
+        <input id="discordId" placeholder="Ton ID Discord (ex: 123456789012345678)" required />
+        <input id="username"  placeholder="Ton pseudo (ex: Jo#1234)" />
+      </div>
+
+      <div class="controls">
+        <button id="prevBtn"   class="btn ghost"   type="button">← Précédent</button>
+        <button id="nextBtn"   class="btn primary" type="button">Suivant →</button>
+        <button id="submitBtn" class="btn primary" type="button" style="display:none">Envoyer mes réponses</button>
+        <span class="small">Tes choix sont sauvegardés quand tu passes à la question suivante.</span>
+      </div>
+    </div>
+  </div>
 </div>
+
 <div id="toast" class="toast"></div>
 
 <script>
-const QCM_SECRET = "jojo2002";
+// ===== Config
 const API_ENDPOINT = "/notify-qcm";
-const questions = [
-  {q:"Le metagaming est-il autorisé ?",choices:["Oui","Non","Uniquement en groupe","Si c'est drôle"],correct:1},
-  {q:"En RP, que signifie 'Fear RP' ?",choices:["Craindre pour sa vie","Ne jamais fuir","Tirer immédiatement","Ignorer la menace"],correct:0},
-  {q:"Peut-on utiliser des infos obtenues hors RP en jeu ?",choices:["Oui","Non","Uniquement avec accord admin","Seulement en urgence"],correct:1},
-  // ... ajoute 37 autres questions ici
+const QCM_SECRET   = "jojo2002";
+
+// ===== Questions (40 vraies — RP/serveur prison)
+const QUESTIONS = [
+  {q:"Le metagaming est-il autorisé ?", a:["Oui","Non","Uniquement avec accord staff","Seulement en urgence"], c:1},
+  {q:"Le 'Fear RP' signifie :", a:["Ignorer la menace","Craindre pour sa vie et agir en conséquence","Toujours fuir","Parler HRP"], c:1},
+  {q:"Utiliser des infos vues sur Twitch en jeu, c’est :", a:["Autorisé si ça t’avantage","Interdit (métagaming)","Autorisé la nuit","Autorisé en gang"], c:1},
+  {q:"Le 'Powergaming' :", a:["Est interdit","Est toléré si pressé","Uniquement pour la police","Ok en 1v1"], c:0},
+  {q:"En cellule disciplinaire, tu dois :", a:["Rire en HRP","Respecter la sanction et jouer la scène","Quitter le serveur","Insulter pour passer le temps"], c:1},
+  {q:"Un admin te contacte en plein RP :", a:["Tu ignores","Tu le préviens en HRP et tu suis ses consignes","Tu quittes","Tu continues et tu répondras plus tard"], c:1},
+  {q:"Le 'Combat logging' (déco en scène) :", a:["Interdit","Toléré","Autorisé si crash","Ok si policier"], c:0},
+  {q:"En parloir, tu :", a:["Fouilles le visiteur","Respectes les règles de visite","Attaques le gardien","Te caches"], c:1},
+  {q:"Insulte raciste en RP :", a:["Jamais tolérée","Tolérée si personnage","Uniquement en off","Ok en gang"], c:0},
+  {q:"Un streamer te provoque HRP :", a:["Tu replies HRP","Tu restes RP et report si besoin","Tu DDOS","Tu leaks"], c:1},
+  {q:"Voler un item via bug :", a:["Ok si discret","Toléré","Interdit (exploit)","Ok contre la police"], c:2},
+  {q:"Armes en prison :", a:["Jamais","Uniquement craft clandestin RP","Toujours","Selon humeur"], c:1},
+  {q:"Tu perds connaissance :", a:["Tu continues à parler","Tu joues l’inconscience","Tu cries à l’aide en HRP","Tu déco"], c:1},
+  {q:"Caméra/zone sécurisée :", a:["Tu ignores","Tu fais un plan RP crédible","Tu tires direct","Tu te tp"], c:1},
+  {q:"OOC en vocal public :", a:["Toléré","Interdit sauf canaux prévus","Toujours ok","Seulement la nuit"], c:1},
+  {q:"Infliger une peine :", a:["Sans motif","Avec motif RP clair","Au hasard","Au feeling"], c:1},
+  {q:"Mort RP déclarée :", a:["Tu oublies ce qui a mené à la mort","Tu te venges","Tu spams HRP","Tu reviens sur place"], c:0},
+  {q:"Argent dupliqué :", a:["Ok si besoin","Interdit et à signaler","Tu partages","Tu caches"], c:1},
+  {q:"Scène d’émeute :", a:["Tu tires sans sommation","Tu respectes gradation de force","Tu déco","Tu te tp"], c:1},
+  {q:"HRP en pleine fouille :", a:["Tu continues HRP","Tu restes RP, tu réponds plus tard","Tu insultes","Tu pars"], c:1},
+  {q:"Menotter un joueur :", a:["Sans raison","Avec raison RP et procédure","Au pif","Jamais"], c:1},
+  {q:"Faire un /me mensonger :", a:["Ok","Interdit (fair-play)","Ok si personne ne voit","Ok en cellule"], c:1},
+  {q:"Micro non fonctionnel :", a:["Tu joues en muet sans prévenir","Tu préviens staff/tu règles avant RP","Tu écris en HRP partout","Tu déco"], c:1},
+  {q:"Uniforme gardien :", a:["Optionnel","Obligatoire en service","Jamais","Au choix"], c:1},
+  {q:"Escorte médicale :", a:["Tu t’échappes toujours","Tu respectes protocole RP","Tu déco","Tu tires"], c:1},
+  {q:"Marché noir :", a:["Totalement libre sans risque","Risque + discrétion RP","Toujours légal","Uniquement staff"], c:1},
+  {q:"NLR (New Life Rule) :", a:["Aucun effet","Tu oublies la scène après mort RP","Tu gardes les infos","Tu te venges"], c:1},
+  {q:"Radio en cellule :", a:["Toujours","Interdit sauf objet RP crédible","Ok en criant","Ok en chuchotant"], c:1},
+  {q:"Prendre otage staff :", a:["Ok","Interdit","Ok si drôle","Ok la nuit"], c:1},
+  {q:"Perma-mute staff :", a:["Tu bypass","Tu respectes et fais appel correctement","Tu crées un alt","Tu insultes"], c:1},
+  {q:"Stream-sniping :", a:["Interdit","Autorisé","Ok amis","Ok gang"], c:0},
+  {q:"Fouille corps inconscient :", a:["Toujours","Selon règles & médecin","Jamais","Uniquement police"], c:1},
+  {q:"Abus d’ems/police :", a:["Ok si RP","Interdit (abus de service)","Ok entre amis","Ok test"], c:1},
+  {q:"Provocation HRP sur Discord :", a:["Sans conséquence","Sanction possible","Obligatoire","Fun"], c:1},
+  {q:"Multi-comptes WL :", a:["Toujours ok","Règlement du serveur","Interdit partout","Conseillé"], c:1},
+  {q:"/try et /me :", a:["Pour décrire actions/hasard de façon fair-play","Pour insulter","Pour flood","Inutile"], c:0},
+  {q:"Refus d’identification :", a:["Toujours permis","Possible conséquences RP","Aucune conséquence","Tu déco"], c:1},
+  {q:"Corruption gardien :", a:["Autorisé sans cadre","Nécessite encadrement RP/Staff","Jamais","Toujours"], c:1},
+  {q:"Crash pendant scène :", a:["Tu reviens et reprends","Tu profites pour fuir","Tu changes de jeu","Tu ignores"], c:0},
+  {q:"Tir dans le dos sans annonce :", a:["Toujours ok","Interdit (pas de KOS)","Ok si tard","Ok gang"], c:1},
+  {q:"Respect des décisions staff :", a:["Optionnel","Obligatoire, recours via tickets","Jamais","Selon ton humeur"], c:1}
 ];
-while(questions.length<40){
-  questions.push({q:`Question ${questions.length+1}`,choices:["Réponse A","Réponse B","Réponse C","Réponse D"],correct:0});
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+const questions = shuffle(QUESTIONS.map(q=>{
+  // mélange des réponses et recalcul de l’index correct
+  const choices = q.a.map((t,i)=>({t,i}));
+  shuffle(choices);
+  const correctIdx = choices.findIndex(x=>x.i===q.c);
+  return { q: q.q, choices: choices.map(x=>x.t), correct: correctIdx };
+}));
+
+// ===== État
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+
+// ===== DOM
+const qtitle = document.getElementById('qtitle');
+const choicesEl = document.getElementById('choices');
+const bar = document.getElementById('bar');
+const metaText = document.getElementById('metaText');
+const percent = document.getElementById('percent');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const discordIdEl = document.getElementById('discordId');
+const usernameEl  = document.getElementById('username');
+const toast = document.getElementById('toast');
+
+function showToast(t, ok=true){
+  toast.textContent = t;
+  toast.className = 'toast ' + (ok ? 'ok':'err');
+  toast.style.display = 'block';
+  setTimeout(()=>toast.style.display='none',4200);
 }
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const shuffledQ = shuffle([...questions]);
-const form = document.getElementById("qcm-form");
-shuffledQ.forEach((q,i)=>{
-  const qDiv = document.createElement("div");
-  qDiv.className="question";
-  const shuffledChoices = shuffle(q.choices.map((c,idx)=>({text:c,index:idx})));
-  qDiv.innerHTML = `<h3>${i+1}. ${q.q}</h3>
-    <div class="choices">
-      ${shuffledChoices.map(ch=>`
-      <label>
-        <input type="radio" name="q${i}" value="${ch.index}" required> ${ch.text}
-      </label>`).join("")}
-    </div>`;
-  form.appendChild(qDiv);
+
+function render(){
+  const q = questions[current];
+  qtitle.textContent = `Q${current+1} — ${q.q}`;
+  choicesEl.innerHTML = q.choices.map((txt,idx)=>`
+    <label class="choice">
+      <input type="radio" name="q" value="${idx}" ${answers[current]===idx?'checked':''}>
+      <span>${txt}</span>
+    </label>
+  `).join('');
+  const p = Math.round(((current)/questions.length)*100);
+  bar.style.width = `${(current)/questions.length*100}%`;
+  metaText.textContent = `Question ${current+1} / ${questions.length}`;
+  percent.textContent = `${p}%`;
+  prevBtn.disabled = current===0;
+  nextBtn.style.display = current<questions.length-1 ? 'inline-block':'none';
+  submitBtn.style.display = current===questions.length-1 ? 'inline-block':'none';
+}
+choicesEl.addEventListener('change', (e)=>{
+  if(e.target && e.target.name==='q'){ answers[current] = Number(e.target.value); }
 });
-const toast = document.getElementById("toast");
-function showToast(msg){
-  toast.innerText=msg;
-  toast.style.display="block";
-  setTimeout(()=>toast.style.display="none",4000);
-}
-document.getElementById("submitBtn").addEventListener("click",async()=>{
-  const discordId = document.getElementById("discordId").value.trim();
-  const username = document.getElementById("username").value.trim();
-  if(!discordId){showToast("❌ ID Discord requis");return;}
+
+prevBtn.addEventListener('click', ()=>{ if(current>0){ current--; render(); }});
+nextBtn.addEventListener('click', ()=>{
+  if(answers[current]==null){ showToast('❌ Choisis une réponse avant de continuer.', false); return; }
+  if(current<questions.length-1){ current++; render(); }
+});
+submitBtn.addEventListener('click', onSubmit);
+
+async function onSubmit(){
+  if(answers[current]==null){ showToast('❌ Choisis une réponse avant d\'envoyer.', false); return; }
+  // score
   let score=0;
-  shuffledQ.forEach((q,i)=>{
-    const ans = document.querySelector(`input[name="q${i}"]:checked`);
-    if(ans && Number(ans.value)===q.correct) score++;
-  });
+  answers.forEach((a,i)=>{ if(a===questions[i].correct) score++; });
+
+  // vérifs ID
+  const discordId = (discordIdEl.value||'').trim();
+  const username  = (usernameEl.value||'').trim() || null;
+  if(!discordId){ showToast('❌ Ton ID Discord est requis.', false); return; }
+
   try{
-    const res=await fetch(API_ENDPOINT,{
-      method:"POST",
-      headers:{"Content-Type":"application/json","x-qcm-secret":QCM_SECRET},
-      body:JSON.stringify({discordId,username,score,total:shuffledQ.length})
+    const res = await fetch(API_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-qcm-secret':QCM_SECRET},
+      body: JSON.stringify({ discordId, username, score, total: questions.length })
     });
-    if(!res.ok) throw new Error("Erreur serveur");
-    new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_d0532919c3.mp3").play();
-    showToast(`✅ Envoyé ! Score: ${score}/${shuffledQ.length}`);
-  }catch(e){
-    showToast("❌ Envoi impossible");
+    if(!res.ok){ const j=await res.json().catch(()=>({})); throw new Error(j.error||('HTTP '+res.status)); }
+
+    // petit son de validation
+    new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_d0532919c3.mp3').play();
+    bar.style.width = '100%'; percent.textContent = '100%';
+    showToast(`✅ Envoyé ! Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%).`);
+  }catch(err){
+    console.error(err);
+    showToast('❌ Envoi impossible : '+err.message, false);
   }
-});
+}
+
+// première vue
+render();
 </script>
 </body>
 </html>
